@@ -17,6 +17,12 @@ export const get = (bookId) =>
     .then(res => res.json())
     .then(data => data.book)
 
+export const getShelfs = () => new Promise((resolve, reject) => {
+  resolve([{id:'currentlyReading', name:'Currently Reading'},
+   {id:'wantToRead', name:'Want to Read'},
+   {id:'read', name:'Read'}])
+})
+
 export const getAll = () =>
   fetch(`${api}/books`, { headers })
     .then(res => res.json())
