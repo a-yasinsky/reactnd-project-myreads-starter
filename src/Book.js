@@ -21,7 +21,7 @@ class Book extends React.Component {
           <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url('+book.imageLinks.thumbnail+')' }}></div>
           <ShelfChanger
             shelfs = {shelfs}
-            activeShelf = {book.shelf}
+            activeShelf = {book.shelf || 'none'}
             onChangeBookShelf={this.onChangeBookShelf}
           />
         </div>
