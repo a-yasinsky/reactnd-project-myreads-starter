@@ -15,14 +15,23 @@ class SearchBooks extends React.Component {
     }))
   }
 
+  clearResults = () => {
+    this.setState(() => ({
+      searchBooks: []
+    }))
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
+    this.clearResults();
     if (this.state.query) {
       BooksAPI.search(this.state.query)
         .then((books) => {
-          this.setState(()=>({
-            searchBooks: [...books]
-          }))
+          if (!('error' in books)) {
+            this.setState(()=>({
+              searchBooks: [...books]
+            }))
+          }
         })
     }
   }
@@ -52,7 +61,7 @@ class SearchBooks extends React.Component {
             <form onSubmit={this.handleSubmit}>
               <input
                 type="text"
-                placeholder="Search by title or author"
+                placeholder="Press Enter to search by title or author"
                 value={this.state.query}
                 onChange={(event) => this.queryChange(event.target.value)}
                 />
