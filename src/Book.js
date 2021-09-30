@@ -15,10 +15,15 @@ class Book extends React.Component {
 
   render() {
     const { book, shelfs } = this.props;
+    let bookCoverStyle = { width: 128,
+                          height: 193 };
+    if ('imageLinks' in book && 'thumbnail' in book.imageLinks) {
+        bookCoverStyle.backgroundImage = 'url('+book.imageLinks.thumbnail+')';
+    }
     return (
       <div className="book">
         <div className="book-top">
-          <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url('+book.imageLinks.thumbnail+')' }}></div>
+          <div className="book-cover" style={bookCoverStyle}></div>
           <ShelfChanger
             shelfs = {shelfs}
             activeShelf = {book.shelf || 'none'}
