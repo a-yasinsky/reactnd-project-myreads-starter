@@ -28,6 +28,12 @@ class SearchBooks extends React.Component {
       BooksAPI.search(this.state.query)
         .then((books) => {
           if (!('error' in books)) {
+            for(let book of books){
+              let index = this.props.books.findIndex( el => el.id === book.id);
+              if (index >= 0) {
+                book.shelf = this.props.books[index].shelf;
+              }
+            }
             this.setState(()=>({
               searchBooks: [...books]
             }))
@@ -75,7 +81,6 @@ class SearchBooks extends React.Component {
                 <Book
                   book={book}
                   shelfs={shelfs}
-                  key={book.id}
                   changeBookShelf={changeBookShelf}
                 />
               </li>

@@ -21,7 +21,6 @@ class Shelf extends React.Component {
                 <Book
                   book={book}
                   shelfs={shelfs}
-                  key={book.id}
                   changeBookShelf={changeBookShelf}
                 />
               </li>
