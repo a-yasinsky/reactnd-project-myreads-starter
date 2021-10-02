@@ -1,4 +1,5 @@
 import React from 'react'
+import debounce from 'lodash.debounce'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import * as BooksAPI from './BooksAPI'
@@ -11,29 +12,21 @@ class SearchBooks extends React.Component {
     changeBookShelf: PropTypes.func.isRequired,
   }
 
-
   state = {
-    query: '',
     searchBooks: []
   }
 
-  queryChange = (query) => {
-    this.setState(()=>({
-      query: query.trim()
-    }))
+  queryChangeDebounced = debounce((q) => {
+        this.queryChange(q)
+    }, 250)
+
+  componentWillUnmount() {
+    this.queryChangeDebounced.cancel();
   }
 
-  clearResults = () => {
-    this.setState(() => ({
-      searchBooks: []
-    }))
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.clearResults();
-    if (this.state.query) {
-      BooksAPI.search(this.state.query)
+  queryChange(query) {
+    if (query) {
+      BooksAPI.search(query)
         .then((books) => {
           if (!('error' in books)) {
             for(let book of books){
@@ -47,7 +40,15 @@ class SearchBooks extends React.Component {
             }))
           }
         })
+    } else {
+      this.clearResults();
     }
+  }
+
+  clearResults() {
+    this.setState(() => ({
+      searchBooks: []
+    }))
   }
 
   render() {
@@ -72,14 +73,11 @@ class SearchBooks extends React.Component {
               However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
               you don't find a specific author or title. Every search is limited by search terms.
             */}
-            <form onSubmit={this.handleSubmit}>
-              <input
-                type="text"
-                placeholder="Press Enter to search by title or author"
-                value={this.state.query}
-                onChange={(event) => this.queryChange(event.target.value)}
-                />
-            </form>
+            <input
+              type="text"
+              placeholder="Press Enter to search by title or author"
+              onChange={(event) => this.queryChangeDebounced(event.target.value)}
+              />
           </div>
         </div>
         <div className="search-books-results">
